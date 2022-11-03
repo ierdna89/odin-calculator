@@ -5,6 +5,7 @@ let secondOperand = null;
 
 
 
+
 function add(a, b) {
    return a + b;
 }
@@ -46,17 +47,13 @@ const bigScreen = document.getElementById("big-screen");
 
 function updateDisplay() {
    bigScreen.textContent = bigDisplayValue;
-
-   // if (bigDisplayValue.length > 10) {
-   //    bigScreen.textContent = bigDisplayValue.substring(0, 10);
-   // }
+   makeBigDisplayDigitsSmaller();
 
    if (bigDisplayValue.length == 0) {
       bigScreen.textContent = "0";
       bigDisplayValue = 0;
    }
-
-   if (bigDisplayValue.length < 10 || !bigDisplayValue.includes(",")) {
+   if (bigDisplayValue.length < 17 || !bigDisplayValue.includes(",")) {
       enableOperandsBtns();
       floatBtn.disabled = false;
    }
@@ -81,12 +78,18 @@ function disaableOperandsBtns() {
 }
 
 function makeBigDisplayDigitsSmaller() {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 11) {
+      bigScreen.style.fontSize = "40px";
+   }
+   else if (bigDisplayValue.length === 14) {
       bigScreen.style.fontSize = "30px";
+   }
+   else if (bigDisplayValue.length < 11) {
+      bigScreen.style.fontSize = "50px";
    }
 }
 
-makeBigDisplayDigitsSmaller();
+// makeBigDisplayDigitsSmaller();
 
 function getDisplayOperand(a) {
    if (bigDisplayValue === "0" || bigDisplayValue === 0) {
@@ -101,17 +104,18 @@ function getDisplayOperand(a) {
 
 
 function clearBigScreen() {
-   // bigScreen.textContent = "0";
    bigDisplayValue = 0;
+   bigScreen.style.fontSize = "50px";
    enableOperandsBtns()
    updateDisplay();
+
 }
 
 const backspaceBtn = document.getElementById("backspace");
 backspaceBtn.addEventListener("click", () => {
    bigDisplayValue = bigDisplayValue.slice(0, -1);
-   // bigScreen.textContent = bigDisplayValue;
    updateDisplay();
+   makeBigDisplayDigitsSmaller();
    console.log(bigDisplayValue);
 });
 
@@ -121,15 +125,24 @@ const allClearBtn = document.getElementById("all-clear");
    clearBigScreen();
 });
 
+const divideBtn = document.getElementById("divide");
+
+
 
 const floatBtn = document.getElementById("float");
 floatBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
+   }
+   if (bigDisplayValue === "0" || bigDisplayValue === 0) {
+      bigScreen.textContent = "0,";
+      bigDisplayValue += ",";
+      // getDisplayOperand(floatBtn);
+      // updateDisplay();
    }
    if (bigDisplayValue.includes(",")) {
       floatBtn.disabled = true;
-   }
+   }   
    else {
       getDisplayOperand(floatBtn);
       updateDisplay();
@@ -138,19 +151,19 @@ floatBtn.addEventListener("click", () => {
 
 const oneNumberBtn = document.getElementById("one");
 oneNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 100) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
       getDisplayOperand(oneNumberBtn);
       updateDisplay();
-      makeBigDisplayDigitsSmaller() 
+      // makeBigDisplayDigitsSmaller();
    }
 });
 
 const twoNumberBtn = document.getElementById("two");
 twoNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17 ) {
       disaableOperandsBtns();
    }
    else {
@@ -161,7 +174,7 @@ twoNumberBtn.addEventListener("click", () => {
 
 const threeNumberBtn = document.getElementById("three");
 threeNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -172,7 +185,7 @@ threeNumberBtn.addEventListener("click", () => {
 
 const fourNumberBtn = document.getElementById("four");
 fourNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -182,7 +195,7 @@ fourNumberBtn.addEventListener("click", () => {
 
 const fiveNumberBtn = document.getElementById("five");
 fiveNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -193,7 +206,7 @@ fiveNumberBtn.addEventListener("click", () => {
 
 const sixNumberBtn = document.getElementById("six");
 sixNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -204,7 +217,7 @@ sixNumberBtn.addEventListener("click", () => {
 
 const sevenNumberBtn = document.getElementById("seven");
 sevenNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -215,7 +228,7 @@ sevenNumberBtn.addEventListener("click", () => {
 
 const eightNumberBtn = document.getElementById("eight");
 eightNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -226,7 +239,7 @@ eightNumberBtn.addEventListener("click", () => {
 
 const nineNumberBtn = document.getElementById("nine");
 nineNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
@@ -237,7 +250,7 @@ nineNumberBtn.addEventListener("click", () => {
 
 const zeroNumberBtn = document.getElementById("zero");
 zeroNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 10) {
+   if (bigDisplayValue.length === 17) {
       disaableOperandsBtns();
    }
    else {
