@@ -5,9 +5,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
+	<script src="https://kit.fontawesome.com/8769c0bd76.js" crossorigin="anonymous"></script>
 	<script src="script.js" defer></script>
 	<title>Calculator</title>
-
+	<link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
 </head>
 <body>
 	<header class="header" id="header">
@@ -18,27 +21,35 @@
 		<div class="grid-container">
 			<button class="all-clear btn erasers" id="all-clear">AC</button>
 			<button class="backspace btn erasers" id="backspace">&#x232b</button>
-			<button class="divide btn operators" id="divide" value="/">&#xf7</button>
+			<button class="divide btn operators" id="divide" value="/">÷</button>
 			<button class="seven btn numbers" id="seven" value="7">7</button>
 			<button class="eight btn numbers" id="eight" value="8">8</button>
 			<button class="nine btn numbers" id="nine" value="9">9</button>
-			<button class="multiply btn operators" id="multiply">&#xd7</button>
+			<button class="multiply btn operators" id="multiply">*</button>
 			<button class="four btn numbers" id="four" value="4">4</button>
 			<button class="five btn numbers" id="five" value="5">5</button>
 			<button class="six btn numbers" id="six" value="6">6</button>
-			<button class="substract btn operators" id="substract">&#x2212</button>
+			<button class="substract btn operators" id="substract">-</button>
 			<button class="one btn numbers" id="one" value="1">1</button>
 			<button class="two btn numbers" id="two" value="2">2</button>
 			<button class="three btn numbers" id="three" value="3">3</button>
-			<button class="add btn operators" id="add">&#x2b</button>
+			<button class="add btn operators" id="add">+</button>
 			<button class="zero btn numbers" id="zero" value="0">0</button>
-			<button class="float btn numbers" id="float" value=".">,</button>
-			<button class="equality btn operators" id="equality">&#x3d</button>
+			<button class="float btn" id="float" value=".">.</button>
+			<button class="equality btn" id="equality">=</button>
 		</div>
 	</main>
-	<footer>
+	<footer class="footer">
+		<p>
+			Copyright ©
+      <script>
+        document.write(new Date().getFullYear())
+      </script>
+      ierdna89 
+    </p>
+    <a href="https://github.com/ierdna89" target="_blank">
+		<i class="fa-brands fa-github"></i>
+		</a>
 	</footer>
-
-	
 </body>
 </html>

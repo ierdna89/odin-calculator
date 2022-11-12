@@ -1,11 +1,8 @@
 let bigDisplayValue = 0;
-let smallDisplayValue = null;
-
 let selectedOperation = null;
 let firstOperand = null;
 let secondOperand = null;
 let operationResult = null;
-
 
 function add(a, b) {
    return a + b;
@@ -24,84 +21,102 @@ function divide(a, b) {
 }
 
 function operate(selectedOperation, a, b) {
-  if(selectedOperation == "add") {
+  if(selectedOperation == "+") {
   	return add(a, b);
   }
-
-  else if (selectedOperation == "substract") {
+  else if (selectedOperation == "-") {
   	return substract(a, b);
   }
-
-  else if (selectedOperation == "multiply") {
+  else if (selectedOperation == "*") {
   	return multiply(a, b);
   }
-
-  else if (selectedOperation == "divide") {
+  else if (selectedOperation == "÷") {
   	return divide(a, b);
   }
 }
 
+function chooseOperator(operator) {
+   if (firstOperand === null) return;
+   if (firstOperand !== null && secondOperand !== null) {
+      operateEqualsBtn();
+   }
+   selectedOperation = operator;
+   bigDisplayValue = 0;
+}
 
 //select each number button and populate the screen
-
-const bigScreen = document.getElementById("big-screen");
-
 function updateDisplay() {
-   bigScreen.textContent = bigDisplayValue;
+   bigScreen.innerText = bigDisplayValue.toString();
    makeBigDisplayDigitsSmaller();
 
-   if (bigDisplayValue.length == 0) {
+   if (selectedOperation === null && operationResult === null) {
+      firstOperand = bigDisplayValue;
+   }
+   if (selectedOperation !== null && operationResult === null) {
+      secondOperand = bigDisplayValue;
+   }
+   if (firstOperand !== null && secondOperand !== null && operationResult !== null) {
+      secondOperand = 0;
+      firstOperand = bigDisplayValue;
+   }
+   if (bigDisplayValue.length === 0) {
       bigScreen.textContent = "0";
       bigDisplayValue = 0;
-
    }
-   if (bigDisplayValue.length < 18) {
+   if (bigDisplayValue.length < 20) {
       enableOperandsBtns();
       floatBtn.disabled = false;
-      console.log(`${bigDisplayValue}`);
    }
 }
 
-// variable declarations to select all button numbers
-const numbers = document.querySelectorAll("numbers");
-
 //function to enable all number buttons after the number on display is smaller than 10 digits
 function enableOperandsBtns() {
-   for (let i = 0; numbers.length > i; i++) {
-      numbers[i].disabled = false;
+   for (let i = 0; numbersBtn.length > i; i++) {
+      numbersBtn[i].disabled = false;
    }
 }
 
 //function to disable all number buttons after the number on display is equals and bigger than 10 digits
-function disaableOperandsBtns() {
-   for (let i = 0; numbers.length > i; i++) {
-      numbers[i].disabled = true;
+function disableOperandsBtns() {
+   for (let i = 0; numbersBtn.length > i; i++) {
+      numbersBtn[i].disabled = true;
    }
 }
 
+//function to enable all operators buttons when pressing AllClear button
+function enableOperatorsBtns() {
+   for (let i = 0; operatorsBtn.length > i; i++) {
+      operatorsBtn[i].disabled = false;
+   }
+}
+
+//function to disable all operators buttons after dividing to zero
+function disableOperatorsBtns() {
+   for (let i = 0; operatorsBtn.length > i; i++) {
+      operatorsBtn[i].disabled = true;
+   }
+}
 
 function makeBigDisplayDigitsSmaller() {
    if (bigDisplayValue.length === 11) {
       bigScreen.style.fontSize = "40px";
    }
    else if (bigDisplayValue.length >= 14) {
-      bigScreen.style.fontSize = "25px";
+      bigScreen.style.fontSize = "26px";
    }
    else if (bigDisplayValue.length < 11) {
       bigScreen.style.fontSize = "50px";
    }
 }
 
-
 function getDisplayOperand(a) {
    if (bigDisplayValue === "0" || bigDisplayValue === 0) {
-      bigDisplayValue = `${a.value}`;
+      bigDisplayValue = a;
    }
    else {
-      bigDisplayValue += `${a.value}`;
+      bigDisplayValue += a;
    }   
 }
-
 
 function clearBigScreen() {
    bigDisplayValue = 0;
@@ -110,265 +125,76 @@ function clearBigScreen() {
    firstOperand = null;
    secondOperand = null;
    operationResult = null;
-   enableOperandsBtns()
+   enableOperandsBtns();
+   enableOperatorsBtns();
+   equalsBtn.disabled = false;
+   backspaceBtn.disabled = false;
+   floatBtn.disabled = false;
    updateDisplay();
 }
 
+function operateEqualsBtn() {
+   if (firstOperand !== null && secondOperand === "0") {
+      bigDisplayValue = "nah bro";
+      updateDisplay();
+      disableOperandsBtns();
+      disableOperatorsBtns();
+      equalsBtn.disabled = true;
+      backspaceBtn.disabled = true;
+      floatBtn.disabled = true;
+   }
+   else if (firstOperand !== null && secondOperand === null) return;
+   else {
+      operationResult = roundResult(operate(selectedOperation, Number(firstOperand), Number(secondOperand)));
+      bigDisplayValue = operationResult.toString();
+      operationResult = null;
+      firstOperand = bigDisplayValue;
+      selectedOperation = null;
+      secondOperand = null;
+      updateDisplay();
+   }
+}
+
+const bigScreen = document.getElementById("big-screen");
+const equalsBtn = document.getElementById("equality");
+const floatBtn = document.getElementById("float");
+const numbersBtn = document.querySelectorAll(".numbers");
+const operatorsBtn = document.querySelectorAll(".operators");
 const backspaceBtn = document.getElementById("backspace");
-backspaceBtn.addEventListener("click", () => {
-   bigDisplayValue = bigDisplayValue.slice(0, -1);
-   updateDisplay();
-   makeBigDisplayDigitsSmaller();
-   console.log(bigDisplayValue);
-});
-
-
 const allClearBtn = document.getElementById("all-clear");
+
 allClearBtn.addEventListener("click", () => {
    clearBigScreen();
 });
 
-// const divideBtn = document.getElementById("divide");
-// divideBtn.addEventListener( "click", () => {
-//    if (secondOperand === null) {
-//       console.log(`hello from divide first`); 
-//       selectedOperation = "divide";
-//       firstOperand = bigDisplayValue;
-//       bigDisplayValue = 0;
-//       // secondOperand = 0;
-//    }
-//    else if (selectedOperation != null) {
-//       console.log(`hello from divide second`); 
-//       selectedOperation = "divide";
-//       operateEqualsBtn();
-//    }
-//    else if (secondOperand === null) {
-//       console.log(`hello from divide third`);  
-//       selectedOperation = "divide";
-//       operateEqualsBtn(); 
-      
-//    }    
-// });
-
-const divideBtn = document.getElementById("divide");
-divideBtn.addEventListener( "click", () => {
-   if (secondOperand === null && selectedOperation === null) {
-      console.log(`hello from divide first`); 
-      selectedOperation = "divide";
-      firstOperand = bigDisplayValue;
-      bigDisplayValue = 0;
-      // secondOperand = 0;
-   }
-   else if (secondOperand === null && selectedOperation != null) {
-      console.log(`hello from divide new added`); 
-      operateEqualsBtn();
-      selectedOperation = "divide";  
-   }
-   else if (selectedOperation != null) {
-      console.log(`hello from divide second`); 
-      selectedOperation = "divide";
-      operateEqualsBtn();
-   }
-   else if (secondOperand === null) {
-      console.log(`hello from divide third`);  
-      selectedOperation = "divide";
-      operateEqualsBtn(); 
-      
-   }    
+backspaceBtn.addEventListener("click", () => {
+   bigDisplayValue = bigDisplayValue.slice(0, -1);
+   updateDisplay();
+   makeBigDisplayDigitsSmaller();
 });
 
-// const multiplyBtn = document.getElementById("multiply");
-// multiplyBtn.addEventListener( "click", () => {
-//    if (secondOperand === null) {
-//       console.log(`hello from multiply first`);
-//       selectedOperation = "multiply";
-//       firstOperand = bigDisplayValue;
-//       bigDisplayValue = 0;
-//       // secondOperand = 0;
-//    }
-//    else if (selectedOperation != null) {
-//       console.log(`hello from multiply second`); 
-//       selectedOperation = "multiply";
-//       operateEqualsBtn();
-//    }
-//    else if (secondOperand === null) {
-//       console.log(`hello from multiply third`);  
-//       selectedOperation = "multiply";
-//       operateEqualsBtn();
-//    }    
-// });
-
-const multiplyBtn = document.getElementById("multiply");
-multiplyBtn.addEventListener( "click", () => {
-   if (secondOperand === null && selectedOperation === null) {
-      console.log(`hello from multiply first`);
-      selectedOperation = "multiply";
-      firstOperand = bigDisplayValue;
-      bigDisplayValue = 0;
-      // secondOperand = 0;
-   }
-   else if (secondOperand === null && selectedOperation != null) {
-      console.log(`hello from multiply new added`); 
-      operateEqualsBtn();
-      selectedOperation = "multiply";
-   }
-   else if (selectedOperation != null) {
-      console.log(`hello from multiply second`); 
-      selectedOperation = "multiply";
-      operateEqualsBtn();
-   }
-   else if (secondOperand === null) {
-      console.log(`hello from multiply third`);  
-      selectedOperation = "multiply";
-      operateEqualsBtn();
-   }    
+numbersBtn.forEach(button => {
+   button.addEventListener("click", () => {
+      if (bigDisplayValue.length >= 20) {
+         disableOperandsBtns();
+      }
+      else {
+         getDisplayOperand(button.innerText);
+         updateDisplay();
+      }
+   });
 });
 
-const substractBtn = document.getElementById("substract");
-substractBtn.addEventListener( "click", () => {
-   if (secondOperand === null && selectedOperation === null) {
-      console.log(`hello from substract first`); 
-      selectedOperation = "substract";
-      firstOperand = bigDisplayValue;
-      bigDisplayValue = 0;
-      // secondOperand = 0;
-   }
-   else if (secondOperand === null && selectedOperation != null) {
-      console.log(`hello from substract new added`); 
-      operateEqualsBtn();
-      selectedOperation = "substract";
-   }
-   else if (selectedOperation != null) {
-      console.log(`hello from substract second`); 
-      
-      operateEqualsBtn();
-      selectedOperation = "substract";
-      
-   }
-   else if (secondOperand === null) {
-      console.log(`hello from substract third`);  
-      selectedOperation = "substract";
-      operateEqualsBtn();
-   }  
+operatorsBtn.forEach(button => {
+   button.addEventListener("click", () => {
+      chooseOperator(button.innerText);
+      enableOperandsBtns();
+   });
 });
 
-const addBtn = document.getElementById("add");
-addBtn.addEventListener( "click", () => {
-   if (secondOperand === null && selectedOperation === null) {
-      console.log(`hello from add first`); 
-      selectedOperation = "add";
-      firstOperand = bigDisplayValue;
-      bigDisplayValue = 0;
-      // secondOperand = 0;
-   }
-   else if (secondOperand === null && selectedOperation != null) {
-      console.log(`hello from add new added`); 
-      operateEqualsBtn();
-      selectedOperation = "add";
-   }
-   else if (secondOperand != null) {
-      console.log(`hello from add second`); 
-      
-      operateEqualsBtn();
-      selectedOperation = "add";
-      
-   }
-   else if (selectedOperation != null) {
-      console.log(`hello from add third`); 
-      selectedOperation = "add";
-      operateEqualsBtn();
-   }
-
-});
-
-function operateEqualsBtn() {
-   
-   if (secondOperand === null && operationResult === null) {
-      console.log(`hello from equals FIRST IF `);
-
-      secondOperand = bigDisplayValue;
-
-      console.log(` firstOperand is: ${firstOperand}`);
-      console.log(` second operand is: ${secondOperand}`);
-      console.log(`selectedOperation is: ${selectedOperation}`);
-
-      operationResult = roundResult(operate(selectedOperation, Number(firstOperand), Number(secondOperand)));
-      
-      console.log(`operationResult: ${operationResult}`);
-
-      bigDisplayValue = operationResult.toString();
-      firstOperand = operationResult;
-      // operationResult = null;
-      secondOperand = null;
-      // selectedOperation = null;
-
-      updateDisplay();
-      bigDisplayValue = 0;
-   } 
-   else if (secondOperand === 0 && operationResult === null) {
-      console.log(`hello from equals SECOND IF `);
-
-      secondOperand = bigDisplayValue;
-
-      console.log(` firstOperand is: ${firstOperand}`);
-      console.log(` second operand is: ${secondOperand}`);
-      console.log(`selectedOperation is: ${selectedOperation}`);
-
-      operationResult = roundResult(operate(selectedOperation, Number(firstOperand), Number(secondOperand)));
-      
-      console.log(`operationResult: ${operationResult}`);
-
-      bigDisplayValue = operationResult.toString();
-      // operationResult = null;
-      firstOperand = bigDisplayValue;
-      // selectedOperation = null;
-      // secondOperand = null;
-
-      updateDisplay();
-      bigDisplayValue = 0;
-   } 
-
-   else {
-      console.log(`hello from equals THIRD IF `);
-
-      secondOperand = bigDisplayValue;
-
-      console.log(` firstOperand is: ${firstOperand}`);
-      console.log(` secondOperand is: ${secondOperand}`);
-      console.log(`selectedOperation is: ${selectedOperation}`);
-
-      operationResult = roundResult(operate(selectedOperation, Number(firstOperand), Number(secondOperand)));
-     
-      console.log(`operationResult: ${operationResult}`);
-     
-      bigDisplayValue = operationResult.toString();
-      // operationResult = null;
-      firstOperand = bigDisplayValue;
-      // selectedOperation = null;
-      secondOperand = null;
-
-      updateDisplay();
-      bigDisplayValue = 0;
-   }
-
-   console.log(` firstOperand is: ${firstOperand}`);
-   console.log(` secondOperand is: ${secondOperand}`);
-   console.log(`selectedOperation: ${selectedOperation}`);
-   console.log(`operationResult: ${operationResult}`);
-   console.log(`bigDisplayValue: ${bigDisplayValue}`);
-   console.log(`*******`);
-}
-
-const equalsBtn = document.getElementById("equality");
-equalsBtn.addEventListener( "click", () => {
-   operateEqualsBtn();
-});
-
-
-const floatBtn = document.getElementById("float");
 floatBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
+   if (bigDisplayValue.length >= 20) {
+      disableOperandsBtns();
    }
    if (bigDisplayValue === "0" || bigDisplayValue === 0) {
       bigScreen.textContent = "0.";
@@ -378,118 +204,13 @@ floatBtn.addEventListener("click", () => {
       floatBtn.disabled = true;
    }   
    else {
-      getDisplayOperand(floatBtn);
+      getDisplayOperand(floatBtn.innerText);
       updateDisplay();
    }
 });
 
-const oneNumberBtn = document.getElementById("one");
-oneNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(oneNumberBtn);
-      updateDisplay();
-   }
-});
-
-const twoNumberBtn = document.getElementById("two");
-twoNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(twoNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const threeNumberBtn = document.getElementById("three");
-threeNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(threeNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const fourNumberBtn = document.getElementById("four");
-fourNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(fourNumberBtn);
-      updateDisplay(); 
-   }});
-
-const fiveNumberBtn = document.getElementById("five");
-fiveNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(fiveNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const sixNumberBtn = document.getElementById("six");
-sixNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(sixNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const sevenNumberBtn = document.getElementById("seven");
-sevenNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(sevenNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const eightNumberBtn = document.getElementById("eight");
-eightNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(eightNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const nineNumberBtn = document.getElementById("nine");
-nineNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(nineNumberBtn);
-      updateDisplay(); 
-   }
-});
-
-const zeroNumberBtn = document.getElementById("zero");
-zeroNumberBtn.addEventListener("click", () => {
-   if (bigDisplayValue.length === 18) {
-      disaableOperandsBtns();
-   }
-   else {
-      getDisplayOperand(zeroNumberBtn);
-      updateDisplay(); 
-   }
+equalsBtn.addEventListener( "click", () => {
+   operateEqualsBtn();
 });
 
 function roundResult(number) {
